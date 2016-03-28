@@ -1,0 +1,25 @@
+#!/bin/sh
+date=`date +%d-%m-%y`
+count1=1
+while [ $count1 -lt 5 ]
+do
+   sleep 1m
+   echo "$date"
+   echo "checking ping status"
+   echo "=========> ifconfig <=========="
+   ifconfig
+   file=~/Desktop/list.txt
+   line1=$(sed '5!d' "$file")
+   getip=$(echo $line1 | tr "controller_ip=" "\n")
+   echo $getip
+   echo "=========> ping <=========="
+   ping -c3 $getip >> $savefile
+   if [ $? != 0 ]; then
+      echo "network is down"
+      count1=`expr $count1 + 1`
+      echo "ping status is not well at $time"
+   else
+      echo "ping status is good at $time"
+      break
+   fi
+done
